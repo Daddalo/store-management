@@ -73,7 +73,7 @@ def list_products(type_product):
             for product in inventory[type_product]:
 
                 quantity = inventory[type_product][product]["quantity"]
-                print(f"Prodotto:{product:.2}| Quantità:{quantity:.2}")
+                print(f"Prodotto:{product}| Quantità:{quantity}")
     else:
         print("Errore con la funzione di list!")
         exit(0)
@@ -104,10 +104,13 @@ def insert_product():
         purchase_price = check_validation_value(input(TEXT_PURCHASE), TEXT_PURCHASE)
         sell_price, purchase_price = check_prices(sell_price, purchase_price)
         
+        sell_price = round(sell_price,2)
+        purchase_price = round(purchase_price,2)
+        
         print(f"AGGIUNTO: {quantity} X {product}")
         print("\n")
         inventory["products"][product] = {}
-        inventory["products"][product] = {"quantity": quantity, "sell_price":round(sell_price,2), "purchase_price":round(purchase_price,2)}
+        inventory["products"][product] = {"quantity": quantity, "sell_price":sell_price, "purchase_price":purchase_price}
 
     dump_data(inventory)
 
