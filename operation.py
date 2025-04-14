@@ -7,7 +7,7 @@ TEXT_QUANTITY = "Inserisci la quantità: "
 TEXT_SELL = "Inserisci il prezzo di vendita: "
 TEXT_PURCHASE = "Inserisci il prezzo di acquisto: "
 TEXT_ADD_PRODUCT = "Aggiungere un altro prodotto? (si/no): "
-NUMERIC_ERROR = "Errore, deve essere un numero\n"
+NUMERIC_ERROR = "Errore, deve essere un numero"
 EMPTY_INVENTORY = "L'inventario è vuoto! Aggiungi un nuovo prodotto"
 
 
@@ -65,7 +65,7 @@ def list_products(type_product):
 
                 quantity = inventory[type_product][product]["quantity"]
                 prezzo = inventory[type_product][product]["sell_price"]
-                print(f"{product:<40} {quantity:<15} €{prezzo:<15}")    
+                print(f"{product:<40} {quantity:<15} €{prezzo:<15.2f}")    
     elif(type_product == "sold_products"):
         if(products_are_finished(inventory, type_product)):
             print("Non ci sono ancora vendite effettuate!")
@@ -73,7 +73,7 @@ def list_products(type_product):
             for product in inventory[type_product]:
 
                 quantity = inventory[type_product][product]["quantity"]
-                print(f"Prodotto:{product}| Quantità:{quantity}")
+                print(f"Prodotto:{product:.2}| Quantità:{quantity:.2}")
     else:
         print("Errore con la funzione di list!")
         exit(0)
@@ -84,8 +84,8 @@ def see_profits():
     """
     inventory = load_file_data()
     print("\n")
-    print(f"Profitti lordi: €{inventory['profits']['gross_profits']}",
-        f"| Profitti netti: €{inventory['profits']['net_profits']}")
+    print(f"Profitti lordi: €{inventory['profits']['gross_profits']:.2f}",
+        f"| Profitti netti: €{inventory['profits']['net_profits']:.2f}")
 
 def insert_product():
     """
@@ -102,10 +102,12 @@ def insert_product():
     else:
         sell_price = check_validation_value(input(TEXT_SELL), TEXT_SELL)
         purchase_price = check_validation_value(input(TEXT_PURCHASE), TEXT_PURCHASE)
+        sell_price, purchase_price = check_prices(sell_price, purchase_price)
+        
         print(f"AGGIUNTO: {quantity} X {product}")
         print("\n")
         inventory["products"][product] = {}
-        inventory["products"][product] = {"quantity": quantity, "sell_price":sell_price, "purchase_price":purchase_price}
+        inventory["products"][product] = {"quantity": quantity, "sell_price":round(sell_price,2), "purchase_price":round(purchase_price,2)}
 
     dump_data(inventory)
 
@@ -124,8 +126,8 @@ def sell_product():
             sell_price = inventory['products'][product]['sell_price']
             purchase_price = inventory['products'][product]['purchase_price']
             
-            gross_profit = quantity*sell_price
-            net_profit = gross_profit - (quantity*purchase_price)
+            gross_profit = round(quantity*sell_price,2)
+            net_profit = round(gross_profit - (quantity*purchase_price),2)
             insert_profits(gross_profit, net_profit, inventory)
 
             decrease_quantity(product, quantity, inventory)
@@ -146,9 +148,9 @@ def sell_product():
         tot = 0
         for sale in product_sold_list:
             tot += sale[0]*sale[2]
-            print(f"{sale[0]}x {sale[1]} €{sale[2]}")
+            print(f"{sale[0]}x {sale[1]} €{sale[2]:.2}")
             
-        print(f"Totale: €{tot}")
+        print(f"Totale: €{tot:.2f}")
         dump_data(inventory)
         
 def update_sold_list(product_sold_list, product, quantity, sell_price):
@@ -198,6 +200,25 @@ def decrease_quantity(product, quantity, inventory):
             inventory['products'].pop(product)
         except KeyError as e:
             print(e)
+            
+def check_prices(sell_price, purchase_price):
+    """
+    Controlla se il prezzo di vendita è inferiore a quello di acquisto e fa reinserire i valori
+
+    Args:
+        sell_price (float): prezzo di vendita
+        purchase_price (float): prezzo di acquisto
+    
+    Returns:
+        sell_price, purchase_price (float), (float): prezzo di vendita e di acquisto validi
+    """
+    while(True):
+        if(sell_price < purchase_price):
+            print("Il prezzo di vendita deve essere maggiore di quello d'acquisto!")
+            sell_price = check_validation_value(input(TEXT_SELL), TEXT_SELL)
+            purchase_price = check_validation_value(input(TEXT_PURCHASE), TEXT_PURCHASE)
+        else: break
+    return sell_price, purchase_price
 
 def check_sell(inventory):
     """
@@ -207,7 +228,7 @@ def check_sell(inventory):
         inventory (dict): l'inventario in cui controllare
 
     Returns:
-        product, quantity (str), (int) il nome del prodotto e la quantità
+        product, quantity (str), (int): il nome del prodotto e la quantità validi
     """
     while(True):
         print("\n")
@@ -308,7 +329,7 @@ def check_validation_quantity(quantity):
             quantity = int(quantity)
             break
         except ValueError as e:
-            quantity = input(NUMERIC_ERROR + TEXT_QUANTITY)
+            quantity = input(NUMERIC_ERROR + " intero\n" + TEXT_QUANTITY)
     return quantity
 
 def check_validation_value(value, text):
@@ -327,5 +348,5 @@ def check_validation_value(value, text):
             value = float(value)
             break
         except ValueError as e:
-            value = input(NUMERIC_ERROR + text)
+            value = input(NUMERIC_ERROR + " float\n" + text)
     return value
