@@ -116,4 +116,4 @@ Nel lavoro è fondamentale seguire sempre le specifiche che ci vengono date alla
 I nomi di variabili, funzioni e metodi vanno sempre scritti in inglese, utilizzando lo snake case, il CamelCase va usato solo per i nomi di classi. Non mischiare italiano e inglese, sempre e solo inglese.</br>
 Utilizza le docstrings per documentare funzioni, classi e metodi.
 
-**AGGIUNTE** : nel progetto sono state fatte due aggiunte rispetto alle richieste. La prima riguarda la possibilità di visualizzare anche i prodotti venduti, la seconda la possibilità di svuotare il file per ricominciare da zero. Queste modifiche sono state fatte per agevolare la visualizzazione delle info presenti nel file. Se non dovessero risultare utili, vista la specifica di fare il progetto così come richiesto, attendo un vostro riscontro.
+**AGGIUNTE** : nel progetto sono state fatte due aggiunte rispetto alle richieste. La prima riguarda la possibilità di visualizzare anche i prodotti venduti, la seconda la possibilità di svuotare il file per ricominciare da zero. Queste modifiche sono state fatte per agevolare la visualizzazione delle info presenti nel file.
