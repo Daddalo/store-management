@@ -216,7 +216,7 @@ def check_prices(sell_price, purchase_price):
         sell_price, purchase_price (float), (float): prezzo di vendita e di acquisto validi
     """
     while(True):
-        if(sell_price < purchase_price):
+        if(sell_price <= purchase_price):
             print("Il prezzo di vendita deve essere maggiore di quello d'acquisto!")
             sell_price = check_validation_value(input(TEXT_SELL), TEXT_SELL)
             purchase_price = check_validation_value(input(TEXT_PURCHASE), TEXT_PURCHASE)
@@ -330,9 +330,13 @@ def check_validation_quantity(quantity):
     while(True):
         try:
             quantity = int(quantity)
+            assert(quantity > 0), NUMERIC_ERROR + "positivo\n"
             break
         except ValueError as e:
             quantity = input(NUMERIC_ERROR + " intero\n" + TEXT_QUANTITY)
+        except AssertionError as e:
+            print(e)
+            quantity = input(TEXT_QUANTITY)
     return quantity
 
 def check_validation_value(value, text):
@@ -349,7 +353,11 @@ def check_validation_value(value, text):
     while(True):
         try:
             value = float(value)
+            assert(value > 0), NUMERIC_ERROR + "positivo\n"
             break
         except ValueError as e:
             value = input(NUMERIC_ERROR + " float\n" + text)
+        except AssertionError as e:
+            print(e)
+            value = input(text)
     return value
